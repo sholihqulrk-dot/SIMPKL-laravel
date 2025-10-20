@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\JournalController;
+use App\Http\Controllers\PklPlacementController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\CheckRole;
 
 
@@ -23,6 +29,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 });
 
+// Profile Routes
+Route::prefix('profile')->middleware(['auth'])->group(function () {
+    Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     // Logout
@@ -31,29 +44,14 @@ Route::middleware('auth')->group(function () {
     // Main dashboard (accessible to all authenticated users)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Student routes - using CheckRole middleware
-    Route::middleware(CheckRole::class . ':student')->prefix('student')->name('student.')->group(function () {
-        Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
-        Route::get('/courses', [StudentController::class, 'courses'])->name('courses');
-    });
-    
-    // Teacher routes - using CheckRole middleware
-    Route::middleware(CheckRole::class . ':teacher')->prefix('teacher')->name('teacher.')->group(function () {
-        Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
-        Route::get('/classes', [TeacherController::class, 'classes'])->name('classes');
-    });
-    
-    // Company routes - using CheckRole middleware
-    Route::middleware(CheckRole::class . ':companies')->prefix('company')->name('company.')->group(function () {
-        Route::get('/dashboard', [CompanyController::class, 'dashboard'])->name('dashboard');
-        Route::get('/jobs', [CompanyController::class, 'jobs'])->name('jobs');
-    });
-    
-    // Admin route example - accessible by both teacher and companies
-    Route::middleware(CheckRole::class . ':teacher,companies')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/reports', function () {
-            return view('admin.reports');
-        })->name('reports');
-    });
+    // Resource Routes untuk semua model
+    Route::resource('students', StudentController::class);
+    Route::resource('teachers', TeacherController::class);
+    Route::resource('companies', CompanyController::class);
+    Route::resource('pkl-placements', PklPlacementController::class);
+    Route::resource('journals', JournalController::class);
+    Route::resource('grades', GradeController::class);
+    Route::resource('documents', DocumentController::class);
+    Route::resource('attendances', AttendanceController::class);
 });
 

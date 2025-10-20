@@ -1,0 +1,414 @@
+@extends('layouts.app')
+
+@section('content')
+<!-- Table Section -->
+<div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+<!-- Card -->
+<div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+    <div class="p-1.5 min-w-full inline-block align-middle">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-2xs overflow-hidden dark:bg-neutral-900 dark:border-neutral-700">
+        <!-- Header -->
+        <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+            <div>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                Data Penempatan PKL
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-neutral-400">
+                Kelola penempatan siswa PKL di berbagai perusahaan.
+            </p>
+            </div>
+
+            <div class="sm:col-span-2 md:grow">
+            <div class="flex justify-end gap-x-2">
+                <!-- Search Component di Layout -->
+                @if(Request::is('*index*') || Request::is('students*') || Request::is('teachers*') || Request::is('companies*') || Request::is('journals*') || Request::is('grades*') || Request::is('documents*') || Request::is('attendances*') || Request::is('pkl-placements*'))
+                <div class="sm:col-span-1">
+                    <label for="global-search-input" class="sr-only">Search</label>
+                    <div class="relative">
+                        <input type="text" 
+                            id="global-search-input" 
+                            name="global-search-input" 
+                            class="py-2 px-3 ps-11 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                            placeholder="Cari data...">
+                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
+                            <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Export Dropdown -->
+                <div class="hs-dropdown [--placement:bottom-right] relative inline-block">
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                    <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    Export
+                </button>
+                </div>
+                <!-- End Export Dropdown -->
+
+                <!-- Add New Button -->
+                <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-600 text-white hover:bg-yellow-700 focus:outline-hidden focus:bg-yellow-700 disabled:opacity-50 disabled:pointer-events-none" href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                </svg>
+                Tambah Penempatan
+                </a>
+            </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        @if($placements->count() > 0)
+        <!-- Table -->
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700" data-searchable="true">
+            <thead class="bg-gray-50 dark:bg-neutral-800">
+            <tr>
+                <th scope="col" class="ps-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">No</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Siswa</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Perusahaan</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Guru Pembimbing</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Periode</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Durasi</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Status</span>
+                </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-end">
+                <div class="flex items-center gap-x-2">
+                    <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">Aksi</span>
+                </div>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+            @foreach($placements as $placement)
+            <tr class="bg-white hover:bg-gray-50 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                <td class="size-px whitespace-nowrap">
+                <div class="ps-6 py-3">
+                    <span class="text-sm text-gray-600 dark:text-neutral-400">{{ $loop->iteration + ($placements->currentPage() - 1) * $placements->perPage() }}</span>
+                </div>
+                </td>
+                
+                <!-- Student Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    <div class="flex items-center gap-x-3">
+                    <div class="flex items-center gap-x-2">
+                        <div class="size-8 bg-blue-100 rounded-full flex items-center justify-center dark:bg-blue-900/20">
+                        <span class="text-sm font-medium text-blue-800 dark:text-blue-200">
+                            {{ substr($placement->student->name ?? 'N/A', 0, 1) }}
+                        </span>
+                        </div>
+                        <div>
+                        <span class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{ $placement->student->name ?? 'N/A' }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">{{ $placement->student->nis ?? '-' }}</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </td>
+
+                <!-- Company Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    <div class="flex items-center gap-x-3">
+                    <div class="flex items-center gap-x-2">
+                        <div class="size-8 bg-purple-100 rounded-full flex items-center justify-center dark:bg-purple-900/20">
+                        <span class="text-sm font-medium text-purple-800 dark:text-purple-200">
+                            {{ substr($placement->company->name ?? 'N/A', 0, 1) }}
+                        </span>
+                        </div>
+                        <div>
+                        <span class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{ $placement->company->name ?? 'N/A' }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">{{ $placement->company->business_field ?? '-' }}</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </td>
+
+                <!-- Teacher Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    <div class="flex items-center gap-x-3">
+                    @if($placement->teacher)
+                    <div class="flex items-center gap-x-2">
+                        <div class="size-8 bg-green-100 rounded-full flex items-center justify-center dark:bg-green-900/20">
+                        <span class="text-sm font-medium text-green-800 dark:text-green-200">
+                            {{ substr($placement->teacher->name, 0, 1) }}
+                        </span>
+                        </div>
+                        <div>
+                        <span class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{ $placement->teacher->name }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">{{ $placement->teacher->nip ?? '-' }}</span>
+                        </div>
+                    </div>
+                    @else
+                    <span class="text-sm text-gray-500 dark:text-neutral-400">Belum ditentukan</span>
+                    @endif
+                    </div>
+                </div>
+                </td>
+
+                <!-- Period Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    <div class="text-sm text-gray-800 dark:text-neutral-200">
+                    {{ \Carbon\Carbon::parse($placement->start_date)->format('d M Y') }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-neutral-400">
+                    s/d {{ \Carbon\Carbon::parse($placement->end_date)->format('d M Y') }}
+                    </div>
+                </div>
+                </td>
+
+                <!-- Duration Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    <span class="text-sm font-medium text-gray-800 dark:text-neutral-200">
+                    {{ $placement->total_weeks }} minggu
+                    </span>
+                </div>
+                </td>
+
+                <!-- Status Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-3">
+                    @php
+                    $statusConfig = [
+                        'active' => ['class' => 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-500', 'label' => 'Aktif'],
+                        'completed' => ['class' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-500', 'label' => 'Selesai'],
+                        'pending' => ['class' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500', 'label' => 'Menunggu'],
+                        'cancelled' => ['class' => 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500', 'label' => 'Dibatalkan'],
+                    ];
+                    $config = $statusConfig[$placement->status] ?? $statusConfig['pending'];
+                    @endphp
+                    <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium rounded-full {{ $config['class'] }}">
+                    @if($placement->status == 'active')
+                    <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                    @elseif($placement->status == 'completed')
+                    <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                    </svg>
+                    @elseif($placement->status == 'pending')
+                    <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                    </svg>
+                    @else
+                    <svg class="size-2.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                    @endif
+                    {{ $config['label'] }}
+                    </span>
+                </div>
+                </td>
+
+                <!-- Actions Column -->
+                <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-1.5 flex justify-end">
+                    <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
+                    <button class="hs-dropdown-toggle py-1.5 px-2 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </button>
+                    <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden divide-y divide-gray-200 min-w-40 z-10 bg-white shadow-2xl rounded-lg p-2 mt-2 dark:divide-neutral-700 dark:bg-neutral-800 dark:border dark:border-neutral-700">
+                        <div class="py-2 first:pt-0 last:pb-0">
+                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                            Detail
+                        </a>
+                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                            Edit
+                        </a>
+                        </div>
+                        <div class="py-2 first:pt-0 last:pb-0">
+                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-blue-600 hover:bg-blue-100 focus:outline-hidden focus:bg-blue-100 dark:text-blue-500 dark:hover:bg-blue-500/10 dark:focus:bg-blue-500/10" href="#">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                            </svg>
+                            Export PDF
+                        </a>
+                        </div>
+                        <div class="py-2 first:pt-0 last:pb-0">
+                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-red-600 hover:bg-red-100 focus:outline-hidden focus:bg-red-100 dark:text-red-500 dark:hover:bg-red-500/10 dark:focus:bg-red-500/10" href="#">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                            </svg>
+                            Hapus
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <!-- End Table -->
+
+        <!-- Footer -->
+        <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
+            <div>
+            <p class="text-sm text-gray-600 dark:text-neutral-400">
+                <span class="font-semibold text-gray-800 dark:text-neutral-200">{{ $placements->total() }}</span> hasil
+            </p>
+            </div>
+
+            <div>
+            <!-- Pagination -->
+            @if($placements->hasPages())
+            <div class="inline-flex gap-x-2">
+                {{-- Previous Page Link --}}
+                @if($placements->onFirstPage())
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" disabled>
+                <svg class="size-3" width="16" height="16" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.506 1.64001L4.85953 7.28646C4.66427 7.48172 4.66427 7.79831 4.85953 7.99357L10.506 13.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Prev
+                </button>
+                @else
+                <a href="{{ $placements->previousPageUrl() }}" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                <svg class="size-3" width="16" height="16" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.506 1.64001L4.85953 7.28646C4.66427 7.48172 4.66427 7.79831 4.85953 7.99357L10.506 13.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Prev
+                </a>
+                @endif
+
+                {{-- Next Page Link --}}
+                @if($placements->hasMorePages())
+                <a href="{{ $placements->nextPageUrl() }}" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                Next
+                <svg class="size-3" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.50598 2L10.1524 7.64645C10.3477 7.84171 10.3477 8.15829 10.1524 8.35355L4.50598 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                </a>
+                @else
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" disabled>
+                Next
+                <svg class="size-3" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.50598 2L10.1524 7.64645C10.3477 7.84171 10.3477 8.15829 10.1524 8.35355L4.50598 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                </button>
+                @endif
+            </div>
+            @endif
+            <!-- End Pagination -->
+            </div>
+        </div>
+        <!-- End Footer -->
+        @else
+        <!-- Empty State -->
+        <div class="max-w-sm w-full min-h-100 flex flex-col justify-center mx-auto px-6 py-4">
+            <div class="flex justify-center items-center size-11 bg-gray-100 rounded-lg dark:bg-neutral-800">
+            <svg class="shrink-0 size-6 text-gray-600 dark:text-neutral-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+            </div>
+
+            <h2 class="mt-5 font-semibold text-gray-800 dark:text-white">
+            Tidak ada data penempatan PKL
+            </h2>
+            <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+            Mulai dengan menambahkan penempatan PKL baru untuk siswa.
+            </p>
+
+            <div class="mt-5 flex flex-col sm:flex-row gap-2">
+            <a class="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-600 text-white hover:bg-yellow-700 focus:outline-hidden focus:bg-yellow-700 disabled:opacity-50 disabled:pointer-events-none" href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/>
+                <path d="M12 5v14"/>
+                </svg>
+                Tambah Penempatan Baru
+            </a>
+            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                Import Data
+            </button>
+            </div>
+        </div>
+        <!-- End Empty State -->
+
+        <!-- Footer -->
+        <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
+            <div>
+            <p class="text-sm text-gray-600 dark:text-neutral-400">
+                <span class="font-semibold text-gray-800 dark:text-neutral-200">0</span> hasil
+            </p>
+            </div>
+
+            <div>
+            <div class="inline-flex gap-x-2">
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" disabled>
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Prev
+                </button>
+
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" disabled>
+                Next
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+            </div>
+        </div>
+        <!-- End Footer -->
+        @endif
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End Card -->
+</div>
+<!-- End Table Section -->
+@endsection

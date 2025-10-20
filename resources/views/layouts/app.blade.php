@@ -31,10 +31,24 @@
 
     <style>
     /* Pastikan modal selalu muncul di atas header dan main */
+    html {
+        scroll-behavior: smooth;
+    }
+
     .hs-overlay {
         z-index: 9999 !important;
     }
     </style>
+
+    <!-- Tambahkan di bagian head -->
+    <script>
+    // Global Search Configuration
+    window.globalSearchConfig = {
+        selector: 'table[data-searchable="true"]',
+        searchInput: '#global-search-input',
+        excludeColumns: [] // Columns to exclude from search (optional)
+    };
+    </script>
 
 
     @stack('styles')
@@ -187,24 +201,14 @@
                                         </div>
 
                                         <div class="p-1 border-t border-gray-200 dark:border-neutral-800">
-                                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                                            href="#">
+                                        <a href="{{ route('profile.index') }}" 
+                                        class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800">
                                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                                            <circle cx="12" cy="7" r="4" />
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <circle cx="12" cy="7" r="4" />
                                             </svg>
                                             Profile
-                                        </a>
-
-                                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                                            href="#">
-                                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                                            <circle cx="12" cy="12" r="3" />
-                                            </svg>
-                                            Settings
                                         </a>
 
                                         <button type="button"
@@ -238,9 +242,18 @@
         @include('layouts.partials.sidebar')
 
         <!-- Content -->
-        <div class="h-[calc(100dvh-62px)] lg:h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-sm rounded-lg dark:bg-neutral-800 dark:border-neutral-700">
+        <div class="h-[calc(100dvh-62px)] lg:h-full flex flex-col bg-white border border-gray-200 shadow-sm rounded-lg dark:bg-neutral-800 dark:border-neutral-700 overflow-y-auto">
+            <!-- Header -->
+            <div class="py-3 px-4 flex flex-wrap justify-between items-center gap-2 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
+                <div>
+                    <!-- Breadcrumbs -->
+                    @include('layouts.partials.breadcrumbs')
+                </div>
+
+            </div>
             @yield('content')
         </div>
+
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
 
@@ -283,6 +296,8 @@
 
     <!-- JS Plugins -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script>
+
+    <script src="{{ asset('js/global-search.js') }}"></script>
     
     @stack('scripts')
 </body>
