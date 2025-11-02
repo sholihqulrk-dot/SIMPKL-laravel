@@ -10,8 +10,15 @@ class JournalController extends Controller
     //
     public function index()
     {
-        $journals = JournalModel::with(['student', 'pklPlacement', 'reviewer'])
+        $journals = JournalModel::with([
+                'student.user', 
+                'pklPlacement.company', 
+                'reviewer.user'
+            ])
+            ->forCurrentUser()
+            ->latest()
             ->paginate(10);
+
         return view('journals.index', compact('journals'));
     }
 }

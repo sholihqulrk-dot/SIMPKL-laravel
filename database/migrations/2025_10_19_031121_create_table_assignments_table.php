@@ -6,22 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('table_assignments', function (Blueprint $table) {
             $table->id();
+            // Foreign key ke tabel perusahaan tempat PKL
+            $table->unsignedBigInteger('pkl_placement_id');
+            $table->foreign('pkl_placement_id')
+                ->references('id')
+                ->on('table_companies')
+                ->onDelete('cascade');
+
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->date('deadline')->nullable();
+            $table->bigInteger('grade')->nullable();
+            $table->enum('created_by_type', ['teacher', 'supervisor']);
+            $table->unsignedBigInteger('created_by_id');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('table_assignments');
+        Schema::dropIfExists('assignments');
     }
 };

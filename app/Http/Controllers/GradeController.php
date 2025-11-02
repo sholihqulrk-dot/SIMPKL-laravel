@@ -10,8 +10,15 @@ class GradeController extends Controller
     //
     public function index()
     {
-        $grades = GradeModel::with(['student', 'teacher', 'company'])
+        $grades = GradeModel::with([
+                'student.user', 
+                'teacher.user', 
+                'company.user'
+            ])
+            ->forCurrentUser()
+            ->latest()
             ->paginate(10);
+
         return view('grades.index', compact('grades'));
     }
 }

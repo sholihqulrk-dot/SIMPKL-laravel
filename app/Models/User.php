@@ -71,6 +71,7 @@ class User extends Authenticatable
         return match($this->role_id) {
             'student' => 'Student',
             'teacher' => 'Teacher',
+            'admin' => 'Admin',
             'companies' => 'Company',
             default => 'Unknown'
         };

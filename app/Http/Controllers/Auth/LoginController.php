@@ -61,6 +61,7 @@ class LoginController extends Controller
         return match($user->role_id) {
             'student' => redirect()->intended($intended)->with('success', 'Welcome back, ' . $user->name . '!'),
             'teacher' => redirect()->intended($intended)->with('success', 'Welcome back, Teacher ' . $user->name . '!'),
+            'admin' => redirect()->intended($intended)->with('success', 'Welcome back, Admin ' . $user->name . '!'),
             'companies' => redirect()->intended($intended)->with('success', 'Welcome back, ' . $user->name . '!'),
             default => redirect()->route('dashboard')->with('success', 'Welcome back!'),
         };

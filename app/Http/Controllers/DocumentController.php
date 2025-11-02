@@ -10,8 +10,15 @@ class DocumentController extends Controller
     //
     public function index()
     {
-        $documents = DocumentModel::with(['student', 'pklPlacement', 'reviewer'])
+        $documents = DocumentModel::with([
+                'student.user', 
+                'pklPlacement.company', 
+                'reviewer.user'
+            ])
+            ->forCurrentUser()
+            ->latest()
             ->paginate(10);
+
         return view('documents.index', compact('documents'));
     }
 }

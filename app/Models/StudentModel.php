@@ -29,4 +29,9 @@ class StudentModel extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function pklPlacements()
+    {
+        return $this->hasMany(PklPlacementModel::class, 'student_id');
+    }
 }

@@ -64,10 +64,23 @@
             <!-- Data Management Section -->
             <div class="pt-3 mt-3 flex flex-col border-t border-gray-200 dark:border-neutral-700">
                 <span class="block ps-2.5 mb-2 font-medium text-xs uppercase text-gray-800 dark:text-neutral-500">Data Management</span>
-                <ul class="flex flex-col gap-y-1">
-                    <!-- Students -->
+                    <ul class="flex flex-col gap-y-1">
+                    @php
+                        $userRole = auth()->user()->role_id ?? 'student';
+                        // Tentukan prefix route berdasarkan role
+                        $routePrefix = match($userRole) {
+                            'student' => 'student.',
+                            'teacher' => 'teacher.',
+                            'companies' => 'company.',
+                            'admin' => 'admin.',
+                            default => 'student.'
+                        };
+                    @endphp
+
+                    <!-- Data Siswa - Untuk Teacher, Admin, Company -->
+                    @role(['teacher', 'admin', 'companies'])
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('students.index') ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('students.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'students.*') ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'students.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
@@ -75,10 +88,12 @@
                             Data Siswa
                         </a>
                     </li>
+                    @endrole
 
-                    <!-- Teachers -->
+                    <!-- Data Guru - Untuk Admin saja -->
+                    @role('admin')
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('teachers.index') ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('teachers.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'teachers.*') ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'teachers.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
@@ -88,20 +103,23 @@
                             Data Guru
                         </a>
                     </li>
+                    @endrole
 
-                    <!-- Companies -->
+                    <!-- Data Perusahaan - Untuk Teacher, Admin, Company -->
+                    @role(['teacher', 'admin', 'student'])
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('companies.index') ? 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('companies.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'companies.*') ? 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'companies.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5m-4 0h4" />
                             </svg>
                             Data Perusahaan
                         </a>
                     </li>
+                    @endrole
 
-                    <!-- PKL Placements -->
+                    <!-- Penempatan PKL - Untuk Semua Role -->
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('pkl-placements.index') ? 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('pkl-placements.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'pkl-placements.*') ? 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'pkl-placements.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                 <circle cx="12" cy="10" r="3" />
@@ -110,9 +128,9 @@
                         </a>
                     </li>
 
-                    <!-- Journals -->
+                    <!-- Jurnal PKL - Untuk Semua Role -->
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('journals.index') ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('journals.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'journals.*') ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'journals.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <polyline points="14 2 14 8 20 8" />
@@ -124,9 +142,21 @@
                         </a>
                     </li>
 
-                    <!-- Grades -->
+                    <!-- Tugas & Assignment - Untuk Semua Role -->
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('grades.index') ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('grades.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'assignments.*') ? 'bg-pink-50 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'assignments.index') }}">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                                <rect x="9" y="3" width="6" height="4" rx="2"/>
+                                <path d="m9 14 2 2 4-4"/>
+                            </svg>
+                            Tugas & Assignment
+                        </a>
+                    </li>
+
+                    <!-- Data Nilai - Untuk Semua Role -->
+                    <li>
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'grades.*') ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'grades.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 3v18h18" />
                                 <path d="M18 17V9" />
@@ -137,9 +167,9 @@
                         </a>
                     </li>
 
-                    <!-- Documents -->
+                    <!-- Dokumen PKL - Untuk Semua Role -->
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('documents.index') ? 'bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('documents.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'documents.*') ? 'bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'documents.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <polyline points="14 2 14 8 20 8" />
@@ -151,9 +181,9 @@
                         </a>
                     </li>
 
-                    <!-- Attendances -->
+                    <!-- Data Absensi - Untuk Semua Role -->
                     <li>
-                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs('attendances.index') ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route('attendances.index') }}">
+                        <a class="w-full flex items-center gap-x-2 py-2 px-2.5 text-sm rounded-lg {{ request()->routeIs($routePrefix . 'attendances.*') ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200' }} focus:outline-none" href="{{ route($routePrefix . 'attendances.index') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                 <line x1="16" x2="16" y1="2" y2="6" />

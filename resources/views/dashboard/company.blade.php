@@ -3,6 +3,12 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@php
+    // Pastikan user terautentikasi sebelum ambil data
+    $user = auth()->user();
+    $role = $user->role_id ?? 'unknown';
+    $name = $user->name ?? 'User';
+@endphp
 
 <!-- Header -->
 <div class="py-3 px-4 flex flex-wrap justify-between items-center gap-2 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">

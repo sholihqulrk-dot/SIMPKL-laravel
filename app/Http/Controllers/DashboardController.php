@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -11,71 +12,44 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        
-        return view('dashboard.index', compact('user'));
-    }
-}
+        $user = Auth::user();
+        $role = $user->role_id;
 
-class StudentController extends Controller
-{
-    /**
-     * Show student dashboard
-     */
-    public function dashboard()
-    {
-        $user = auth()->user();
-        
-        return view('dashboard.student', compact('user'));
+        // Redirect ke dashboard berdasarkan role
+        return match($role) {
+            'student' => $this->studentDashboard($user),
+            'teacher' => $this->teacherDashboard($user),
+            'companies' => $this->companyDashboard($user),
+            'admin' => $this->adminDashboard($user),
+            default => abort(403, 'Unauthorized role'),
+        };
     }
 
-    /**
-     * Show student courses
-     */
-    public function courses()
+    protected function studentDashboard($user)
     {
-        return view('dashboard.student-courses');
-    }
-}
-
-class TeacherController extends Controller
-{
-    /**
-     * Show teacher dashboard
-     */
-    public function dashboard()
-    {
-        $user = auth()->user();
-        
-        return view('dashboard.teacher', compact('user'));
+        // Logika khusus student
+        $studentData = []; // Tambahkan data yang diperlukan
+        return view('dashboard.student', compact('user', 'studentData'));
     }
 
-    /**
-     * Show teacher classes
-     */
-    public function classes()
+    protected function teacherDashboard($user)
     {
-        return view('dashboard.teacher-classes');
-    }
-}
-
-class CompanyController extends Controller
-{
-    /**
-     * Show company dashboard
-     */
-    public function dashboard()
-    {
-        $user = auth()->user();
-        
-        return view('dashboard.company', compact('user'));
+        // Logika khusus teacher
+        $teacherData = []; // Tambahkan data yang diperlukan
+        return view('dashboard.teacher', compact('user', 'teacherData'));
     }
 
-    /**
-     * Show job postings
-     */
-    public function jobs()
+    protected function companyDashboard($user)
     {
-        return view('dashboard.company-jobs');
+        // Logika khusus company
+        $companyData = []; // Tambahkan data yang diperlukan
+        return view('dashboard.company', compact('user', 'companyData'));
+    }
+
+    protected function adminDashboard($user)
+    {
+        // Logika khusus admin
+        $adminData = []; // Tambahkan data yang diperlukan
+        return view('dashboard.admin', compact('user', 'adminData'));
     }
 }

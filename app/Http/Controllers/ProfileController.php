@@ -25,9 +25,10 @@ class ProfileController extends Controller
                 $profileData = StudentModel::where('user_id', $user->id)->first();
                 break;
             case 'teacher':
+            case 'admin': // tambahkan admin ke sini
                 $profileData = TeacherModel::where('user_id', $user->id)->first();
                 break;
-            case 'companies':
+            case 'companies':   
                 $profileData = CompanyModel::where('user_id', $user->id)->first();
                 break;
         }
@@ -48,6 +49,7 @@ class ProfileController extends Controller
                 $profileData = StudentModel::where('user_id', $user->id)->first();
                 break;
             case 'teacher':
+            case 'admin': // tambahkan admin ke sini
                 $profileData = TeacherModel::where('user_id', $user->id)->first();
                 break;
             case 'companies':
@@ -93,6 +95,7 @@ class ProfileController extends Controller
                 $this->updateStudentProfile($user, $request);
                 break;
             case 'teacher':
+            case 'admin': // tambahkan admin ke sini
                 $this->updateTeacherProfile($user, $request);
                 break;
             case 'companies':

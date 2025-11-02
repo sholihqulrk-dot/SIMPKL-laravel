@@ -19,6 +19,8 @@
                 Student Dashboard
             @elseif ($role === 'teacher')
                 Teacher Dashboard
+            @elseif ($role === 'admin')
+                Admin Dashboard
             @elseif ($role === 'companies')
                 Company Dashboard
             @else
@@ -39,6 +41,8 @@
         @include('dashboard.student')
     @elseif ($role === 'teacher')
         @include('dashboard.teacher')
+    @elseif ($role === 'admin')
+        @include('dashboard.admin') {{-- Buat file admin.blade.php jika perlu, atau gunakan teacher --}}
     @elseif ($role === 'companies')
         @include('dashboard.company')
     @else

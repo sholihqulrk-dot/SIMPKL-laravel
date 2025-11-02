@@ -2,23 +2,27 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function boot()
     {
-        //
-    }
+        // Custom directive untuk check role
+        Blade::if('role', function ($roles) {
+            $userRole = auth()->user()->role_id ?? 'student';
+            $allowedRoles = is_array($roles) ? $roles : explode(',', $roles);
+            
+            return in_array($userRole, $allowedRoles);
+        });
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
+        // Custom directive untuk check multiple roles
+        Blade::if('hasanyrole', function ($roles) {
+            $userRole = auth()->user()->role_id ?? 'student';
+            $allowedRoles = is_array($roles) ? $roles : explode(',', $roles);
+            
+            return in_array($userRole, $allowedRoles);
+        });
     }
 }

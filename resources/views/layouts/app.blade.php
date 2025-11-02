@@ -14,6 +14,14 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{ asset('css/datatable.css') }}"></link>
+    
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
+
     <!-- Theme Check and Update -->
     <script>
         const html = document.querySelector('html');
@@ -29,26 +37,15 @@
     <!-- CSS Preline -->
     <link rel="stylesheet" href="https://preline.co/assets/css/main.css?v=3.0.1">
 
+    <link rel="stylesheet" href="{{ asset('css/modal.css') }}"></link>
+
     <style>
-    /* Pastikan modal selalu muncul di atas header dan main */
-    html {
-        scroll-behavior: smooth;
-    }
-
-    .hs-overlay {
-        z-index: 9999 !important;
-    }
+        html { scroll-behavior: smooth; }
+        /* jangan pakai z-index terlalu tinggi di sini, nanti tumpang tindih */
+        .hs-overlay {
+            z-index: 10000 !important;
+        }
     </style>
-
-    <!-- Tambahkan di bagian head -->
-    <script>
-    // Global Search Configuration
-    window.globalSearchConfig = {
-        selector: 'table[data-searchable="true"]',
-        searchInput: '#global-search-input',
-        excludeColumns: [] // Columns to exclude from search (optional)
-    };
-    </script>
 
 
     @stack('styles')
@@ -56,7 +53,7 @@
 
 <body class="hs-overlay-body-open overflow-hidden bg-gray-100 dark:bg-neutral-900">
     <!-- ========== HEADER ========== -->
-    <header class="fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-48 lg:z-61 w-full bg-white border-b border-gray-200 text-sm py-2.5 dark:bg-neutral-900 dark:border-neutral-700">
+    <header class="fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-48 lg:z-61 w-full bg-white border-b border-gray-200 text-sm py-2.5 dark:bg-neutral-900 dark:border-neutral-700 isolate">
         <nav class="px-4 sm:px-6 flex basis-full items-center w-full mx-auto">
             <div class="w-full flex items-center gap-x-1.5">
                 <ul class="flex items-center gap-1.5">
@@ -200,6 +197,28 @@
                                         </span>
                                         </div>
 
+                                        <!-- Switch/Toggle -->
+                                        <div class="p-3 border-t border-gray-200 dark:border-neutral-800" >
+                                            <div class="flex flex-wrap justify-between items-center gap-2">
+                                                <span class="flex-1 cursor-pointer text-sm text-gray-600 dark:text-neutral-400">Theme</span>
+                                                <div class="p-0.5 inline-flex cursor-pointer bg-gray-100 rounded-full dark:bg-neutral-800">
+                                                <button type="button" class="size-7 flex justify-center items-center bg-white shadow-sm text-gray-800 rounded-full dark:text-neutral-200 hs-auto-mode-active:bg-transparent hs-auto-mode-active:shadow-none hs-dark-mode-active:bg-transparent hs-dark-mode-active:shadow-none" data-hs-theme-click-value="default">
+                                                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v1"/><path d="M12 20v1"/><path d="M3 12h1"/><path d="M20 12h1"/><path d="m18.364 5.636-.707.707"/><path d="m6.343 17.657-.707.707"/><path d="m5.636 5.636.707.707"/><path d="m17.657 17.657.707.707"/></svg>
+                                                    <span class="sr-only">Default (Light)</span>
+                                                </button>
+                                                <button type="button" class="size-7 flex justify-center items-center text-gray-800 rounded-full dark:text-neutral-200 hs-dark-mode-active:bg-white hs-dark-mode-active:shadow-sm hs-dark-mode-active:text-neutral-800" data-hs-theme-click-value="dark">
+                                                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                                                    <span class="sr-only">Dark</span>
+                                                </button>
+                                                <button type="button" class="size-7 flex justify-center items-center text-gray-800 rounded-full dark:text-neutral-200 hs-auto-light-mode-active:bg-white hs-auto-dark-mode-active:bg-red-800 hs-auto-mode-active:shadow-sm" data-hs-theme-click-value="auto">
+                                                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                                                    <span class="sr-only">Auto (System)</span>
+                                                </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Switch/Toggle -->
+
                                         <div class="p-1 border-t border-gray-200 dark:border-neutral-800">
                                         <a href="{{ route('profile.index') }}" 
                                         class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800">
@@ -238,6 +257,7 @@
 
     <!-- ========== MAIN CONTENT ========== -->
     <main class="lg:hs-overlay-layout-open:ps-60 transition-all duration-300 lg:fixed lg:inset-0 pt-15 px-3 pb-3">
+
         <!-- Sidebar -->
         @include('layouts.partials.sidebar')
 
@@ -246,6 +266,7 @@
             <!-- Header -->
             <div class="py-3 px-4 flex flex-wrap justify-between items-center gap-2 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
                 <div>
+                    @include('layouts.partials.notifications')
                     <!-- Breadcrumbs -->
                     @include('layouts.partials.breadcrumbs')
                 </div>
@@ -258,46 +279,65 @@
     <!-- ========== END MAIN CONTENT ========== -->
 
     <!-- Logout Confirmation Modal -->
-    <div id="hs-logout-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="hs-logout-modal-label">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-            <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-700/70">
-                <div class="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-800">
-                    <h3 id="hs-logout-modal-label" class="font-semibold text-gray-800 dark:text-white">
-                        Confirm Logout
-                    </h3>
-                    <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#hs-logout-modal">
-                        <span class="sr-only">Close</span>
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 6 6 18"></path>
-                            <path d="m6 6 12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-4 overflow-y-auto">
-                    <p class="text-gray-800 dark:text-neutral-400">
-                        Are you sure you want to logout? You will need to login again to access your account.
-                    </p>
-                </div>
-                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-neutral-800">
-                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" data-hs-overlay="#hs-logout-modal">
-                        Cancel
-                    </button>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
-                            Logout
-                        </button>
-                    </form>
-                </div>
+    <div id="hs-logout-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto" role="dialog" tabindex="-1" aria-labelledby="hs-logout-modal-label">
+    <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all md:max-w-2xl md:w-full m-3 md:mx-auto">
+        <div class="relative flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
+        
+        <!-- Tombol Close -->
+        <div class="absolute top-2 end-2">
+            <button type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600" aria-label="Close" data-hs-overlay="#hs-logout-modal">
+            <span class="sr-only">Close</span>
+            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Konten -->
+        <div class="p-4 sm:p-10 overflow-y-auto">
+            <div class="flex gap-x-4 md:gap-x-7">
+            <!-- Icon -->
+            <span class="shrink-0 inline-flex justify-center items-center size-11 sm:w-15.5 sm:h-15.5 rounded-full border-4 border-red-50 bg-red-100 text-red-500 dark:bg-red-700 dark:border-red-600 dark:text-red-100">
+                <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+            </span>
+            <!-- End Icon -->
+
+            <div class="grow">
+                <h3 id="hs-logout-modal-label" class="mb-2 text-xl font-bold text-gray-800 dark:text-neutral-200">
+                Confirm Logout
+                </h3>
+                <p class="text-gray-500 dark:text-neutral-500">
+                Are you sure you want to log out? You’ll need to log in again to access your account.
+                </p>
+            </div>
             </div>
         </div>
+
+        <!-- Tombol Aksi -->
+        <div class="flex justify-end items-center gap-x-2 py-3 px-4 bg-gray-50 border-t border-gray-200 dark:bg-neutral-950 dark:border-neutral-800">
+            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" data-hs-overlay="#hs-logout-modal">
+            Cancel
+            </button>
+
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+            @csrf
+            <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-hidden focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
+                Logout
+            </button>
+            </form>
+        </div>
+        </div>
+    </div>
     </div>
     <!-- End Logout Modal -->
-
+    
     <!-- JS Plugins -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script>
 
-    <script src="{{ asset('js/global-search.js') }}"></script>
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+    <script src="{{ asset('js/global-datatables.js') }}"></script>
     
     @stack('scripts')
 </body>
