@@ -2,23 +2,6 @@
 
 @section('content')
 
-{{-- ✅ Alert Success --}}
-@if (session('success'))
-<div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-    <div class="relative rounded-lg border border-green-200 bg-green-50 text-green-800 p-4 flex items-start space-x-3 shadow-sm">
-        <svg class="flex-shrink-0 size-5 mt-0.5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <div class="text-sm leading-relaxed">{!! session('success') !!}</div>
-        <button type="button" class="absolute top-2 right-2 text-green-600 hover:text-green-800"
-            data-hs-remove-element="#success-alert">
-            <span class="sr-only">Close</span>
-            ✕
-        </button>
-    </div>
-</div>
-@endif
 
 {{-- ❌ Alert Error --}}
 @if (session('error'))

@@ -1,6 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
+
+{{-- ❌ Alert Error --}}
+@if (session('error'))
+<div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div class="relative rounded-lg border border-red-200 bg-red-50 text-red-800 p-4 flex items-start space-x-3 shadow-sm">
+        <svg class="flex-shrink-0 size-5 mt-0.5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
+        </svg>
+        <div class="text-sm leading-relaxed">{!! session('error') !!}</div>
+        <button type="button" class="absolute top-2 right-2 text-red-600 hover:text-red-800"
+            data-hs-remove-element="#error-alert">
+            <span class="sr-only">Close</span>
+            ✕
+        </button>
+    </div>
+</div>
+@endif
+
+
+{{-- ⚠️ Detail Error Import --}}
+@if (session('import_errors'))
+<div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div class="rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-800 p-4 shadow-sm">
+        <div class="flex items-start space-x-3 mb-2">
+            <svg class="flex-shrink-0 size-5 text-yellow-500 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v2m0 4h.01M4.93 4.93a10 10 0 1 1 14.14 14.14A10 10 0 0 1 4.93 4.93z" />
+            </svg>
+            <h3 class="font-semibold">Beberapa data tidak dapat diimpor:</h3>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-yellow-200 text-sm">
+                <thead class="bg-yellow-100">
+                    <tr>
+                        <th class="px-3 py-2 text-left font-medium text-yellow-800">#</th>
+                        <th class="px-3 py-2 text-left font-medium text-yellow-800">Data</th>
+                        <th class="px-3 py-2 text-left font-medium text-yellow-800">Pesan Error</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-yellow-100">
+                    @foreach (session('import_errors') as $index => $error)
+                        <tr>
+                            <td class="px-3 py-2">{{ $index + 1 }}</td>
+                            <td class="px-3 py-2 text-gray-700 text-xs">
+                                <pre class="whitespace-pre-wrap break-words">{{ json_encode($error['row'], JSON_PRETTY_PRINT) }}</pre>
+                            </td>
+                            <td class="px-3 py-2 text-red-700 text-xs">
+                                <ul class="list-disc pl-4">
+                                    @foreach ($error['errors'] as $err)
+                                        <li>{{ $err }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endif
+
+
 <!-- Table Section -->
 <div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
 <!-- Card -->
