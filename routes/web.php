@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
     // ==================== STUDENT ROUTES ====================
     Route::middleware('checkrole:student')->name('student.')->group(function () {
+        
         Route::get('/student/pkl-placements', [PklPlacementController::class, 'index'])->name('pkl-placements.index');
         Route::get('/student/pkl-placements/{id}', [PklPlacementController::class, 'show'])->name('pkl-placements.show');
         Route::resource('/student/journals', JournalController::class)->names([
@@ -164,9 +165,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // ==================== ADMIN ROUTES ====================
-    Route::middleware('checkrole:admin')->name('admin.')->group(function () {
+    Route::middleware('checkrole:admin')->prefix('admin')->name('admin.')->group(function () {
+
         // Full access untuk admin
-        Route::resource('/admin/students', StudentController::class)->names([
+        Route::resource('/students', StudentController::class)->names([
             'index' => 'students.index',
             'create' => 'students.create',
             'store' => 'students.store',
@@ -175,34 +177,55 @@ Route::middleware('auth')->group(function () {
             'update' => 'students.update',
             'destroy' => 'students.destroy'
         ]);
-        Route::resource('/admin/teachers', TeacherController::class)->names([
-            'index' => 'teachers.index',
-            'create' => 'teachers.create',
-            'store' => 'teachers.store',
-            'show' => 'teachers.show',
-            'edit' => 'teachers.edit',
-            'update' => 'teachers.update',
-            'destroy' => 'teachers.destroy'
-        ]);
-        Route::resource('/admin/companies', CompanyController::class)->names([
+
+        Route::post('students/import', [StudentController::class, 'import'])->name('students.import');
+        Route::get('students/export', [StudentController::class, 'export'])->name('students.export');
+        Route::get('students/template', [StudentController::class, 'downloadTemplate'])->name('students.template');
+
+        Route::resource('/teachers', TeacherController::class)->except(['show'])->names([
+        'index' => 'teachers.index',
+        'create' => 'teachers.create',
+        'store' => 'teachers.store',
+        'edit' => 'teachers.edit',
+        'update' => 'teachers.update',
+        'destroy' => 'teachers.destroy'
+    ]);
+    
+
+        // Tambahkan rute import/export untuk teacher
+        Route::post('/teachers/import', [TeacherController::class, 'import'])->name('teachers.import');
+        Route::get('/teachers/export', [TeacherController::class, 'export'])->name('teachers.export');
+        Route::get('/teachers/template', [TeacherController::class, 'downloadTemplate'])->name('teachers.template');
+
+
+        Route::resource('/companies', CompanyController::class)->except(['show'])->names([
             'index' => 'companies.index',
             'create' => 'companies.create',
             'store' => 'companies.store',
-            'show' => 'companies.show',
             'edit' => 'companies.edit',
             'update' => 'companies.update',
             'destroy' => 'companies.destroy'
         ]);
-        Route::resource('/admin/pkl-placements', PklPlacementController::class)->names([
+
+        Route::post('/companies/import', [CompanyController::class, 'import'])->name('companies.import');
+        Route::get('/companies/export', [CompanyController::class, 'export'])->name('companies.export');
+        Route::get('/companies/template', [CompanyController::class, 'downloadTemplate'])->name('companies.template');
+        
+        Route::resource('/pkl-placements', PklPlacementController::class)->except(['show'])->names([
             'index' => 'pkl-placements.index',
             'create' => 'pkl-placements.create',
             'store' => 'pkl-placements.store',
-            'show' => 'pkl-placements.show',
             'edit' => 'pkl-placements.edit',
             'update' => 'pkl-placements.update',
             'destroy' => 'pkl-placements.destroy'
         ]);
-        Route::resource('/admin/journals', JournalController::class)->names([
+
+        // Tambahkan rute import/export untuk placement
+        Route::post('/pkl-placements/import', [PklPlacementController::class, 'import'])->name('pkl-placements.import');
+        Route::get('/pkl-placements/export', [PklPlacementController::class, 'export'])->name('pkl-placements.export');
+        Route::get('/pkl-placements/template', [PklPlacementController::class, 'downloadTemplate'])->name('pkl-placements.template');
+
+        Route::resource('/journals', JournalController::class)->names([
             'index' => 'journals.index',
             'create' => 'journals.create',
             'store' => 'journals.store',
@@ -211,7 +234,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'journals.update',
             'destroy' => 'journals.destroy'
         ]);
-        Route::resource('/admin/grades', GradeController::class)->names([
+        Route::resource('/grades', GradeController::class)->names([
             'index' => 'grades.index',
             'create' => 'grades.create',
             'store' => 'grades.store',
@@ -220,7 +243,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'grades.update',
             'destroy' => 'grades.destroy'
         ]);
-        Route::resource('/admin/documents', DocumentController::class)->names([
+        Route::resource('/documents', DocumentController::class)->names([
             'index' => 'documents.index',
             'create' => 'documents.create',
             'store' => 'documents.store',
@@ -229,7 +252,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'documents.update',
             'destroy' => 'documents.destroy'
         ]);
-        Route::resource('/admin/attendances', AttendanceController::class)->names([
+        Route::resource('/attendances', AttendanceController::class)->names([
             'index' => 'attendances.index',
             'create' => 'attendances.create',
             'store' => 'attendances.store',
@@ -238,7 +261,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'attendances.update',
             'destroy' => 'attendances.destroy'
         ]);
-        Route::resource('/admin/assignments', AssignmentController::class)->names([
+        Route::resource('/assignments', AssignmentController::class)->names([
             'index' => 'assignments.index',
             'create' => 'assignments.create',
             'store' => 'assignments.store',

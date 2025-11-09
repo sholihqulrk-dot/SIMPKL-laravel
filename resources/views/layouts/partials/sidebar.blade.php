@@ -3,13 +3,13 @@
     -translate-x-full transition-all duration-300 transform
     w-60
     hidden
-    fixed inset-y-0 z-60 start-0
-    bg-white border-e border-gray-200
+    fixed inset-y-0 z-10 start-0
+    bg-gray-100
     lg:block lg:-translate-x-full lg:end-auto lg:bottom-0
-    dark:bg-neutral-900 dark:border-neutral-700" role="dialog" tabindex="-1" aria-label="Sidebar">
+    dark:bg-neutral-900" role="dialog" tabindex="-1" aria-label="Sidebar">
     <div class="lg:pt-13 relative flex flex-col h-full max-h-full">
         <!-- Body -->
-        <nav class="p-3 size-full flex flex-col overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+        <nav class="p-3 size-full flex flex-col overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
             <div class="lg:hidden mb-2 flex items-center justify-between">
                 <!-- Close Button for Mobile -->
                 <button type="button" class="p-1.5 size-7.5 inline-flex items-center gap-x-1 text-xs rounded-md text-gray-500 hover:text-gray-800 focus:outline-none dark:text-neutral-500 dark:hover:text-neutral-400" data-hs-overlay="#hs-pro-sidebar">
